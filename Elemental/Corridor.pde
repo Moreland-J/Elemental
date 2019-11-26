@@ -1,9 +1,15 @@
 public class Corridor {
+  Tile[] tiles;
+  
   Corridor() {
     
   }
   
   public void draw() {
+    
+  }
+  
+  public void makePath(int level) {
     
   }
 }
