@@ -5,6 +5,11 @@ public class Tile {
   boolean on, platform;      // on means a part of the room, off means a wall
                             // is there a platform on this tile of the room?
   
+  Tile() {
+    this.width = displayWidth / 45;
+    this.height = displayHeight / 26;
+  }
+  
   Tile(int x, int y, boolean on) {
     this.pos = new PVector(x, y);
     // generate height and width according to display
@@ -12,15 +17,11 @@ public class Tile {
     this.height = displayHeight / 26;
     this.on = on;
     
-    if (this.on) {
-      col1 = 192;
-      col2 = 192;
-      col3 = 192;
+    if (on) {
+      turnOn();
     }
     else {
-      col1 = 32;
-      col2 = 32;
-      col3 = 32;
+      turnOff();
     }
   }
   
@@ -34,6 +35,10 @@ public class Tile {
     col1 = 192;
     col2 = 192;
     col3 = 192;
+  }
+  
+  public boolean isOn() {
+    return on;
   }
   
   public void turnOff() {

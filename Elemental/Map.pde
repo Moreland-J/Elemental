@@ -31,7 +31,7 @@ public class Map {
     
     System.out.println("Start x: " + startX + " y: " + startY);
     while (!findPath(startX, startY, 5)) {
-      // repeat
+      // IF IT REACHES AN ERROR START AGAIN
     }
     
     for (int i = 0; i < route.size(); i++) {
@@ -39,31 +39,29 @@ public class Map {
     }
     
     corridors = new Corridor[route.size()];
-    // make corridors out of route
     char prev = '0';
     char next = '0';
-    // remember we've saved the route in reverse order (goal to start)
+    // REMEMBER WE'VE SAVED ROUTE IN REVERSE ORDER (goal to start)
     for (int i = 0; i < route.size(); i++) {
       if (i == 0) {
-        // don't check next, just check prev
         prev = checkPrev(i);
         next = '0';
         corridors[i] = new Corridor(prev, next);
       }
       else if (i == route.size() - 1) {
-        // don't check prev, just check next
         prev = '0';
         next = checkNext(i);
         corridors[i] = new Corridor(prev, next);
       }
       else {
-        // check prev and next
         prev = checkPrev(i);
         next = checkNext(i);
         corridors[i] = new Corridor(prev, next);
       }
-      //System.out.println(prev + " " + next);
     }
+    
+    // CALL FOR DEFINITE PATH CREATION
+    solutionPath();
     
     return corridors;
   }
@@ -75,12 +73,12 @@ public class Map {
       return true;
     }
     
-    //System.out.println("x: " + x + " y: " + y);
+    // ERROR
     if (x >= area.length || x < 0 || y >= area[0].length || y < 0 || area[x][y]) {
-      //System.out.println("Error");
       return false;
     }
     
+    // ADD PREVIOUS CORRIDOR TO PATH
     area[x][y] = true;
     switch((int) random(1, 5)) {
       case 1:
@@ -114,6 +112,7 @@ public class Map {
     }
   }
   
+  // CHECK DIRECTION LAST CORRIDOR CAME FROM
   public char checkPrev(int i) {
     if (north(i, i + 1)) {
       return 'n';
@@ -130,6 +129,7 @@ public class Map {
     return 'u';
   }
   
+  // CHECK WHAT DIRECTION NEXT CORRIDOR IS GOING TO
   public char checkNext(int i) {
     if (north(i, i - 1)) {
       return 'n';
@@ -172,5 +172,37 @@ public class Map {
       return true;
     }
     return false; 
+  }
+  
+  // ENSURES PATH ALONG ALL CORRIDORS
+  public void solutionPath() {
+    //for (int i = corridors.length - 1; i > 0; i--) {
+    //  // GET X, Y FROM CORRIDOR SPACE
+    //  PVector current = new PVector((int) random(4, corridors[i].tiles.length - 5), (int) random(9, corridors[i].tiles[0].length - 7));
+    //  PVector next = new PVector((int) random(4, corridors[i - 1].tiles.length - 5), (int) random(9, corridors[i - 1].tiles[0].length - 7));
+    //  PVector cursor = current.copy();
+      
+    //  while (cursor.x != next.x && cursor.y != next.y) {
+    //    // choose to make either platform or ladder (go vertical or horizontal movement)
+    //    if (corridors[i].shape == 1 || corridors[i].shape == 4 || corridors[i].shape ==  7 || corridors[i].shape == 8 || corridors[i].shape ==  9
+    //        && (corridors[i - 1].shape == 1 || corridors[i - 1].shape == 4 || corridors[i - 1].shape == 6 || corridors[i - 1].shape == 7 || corridors[i - 1].shape == 8 || corridors[i - 1].shape == 9)) {
+    //      // draw platform at location
+    //      corridors[i].addPlat((int) cursor.x, (int) cursor.y, (int) next.x, (int) next.y, checkNext(i));
+    //      cursor.x = next.x;
+    //    }
+    //    else {
+    //      // draw ladder at location?
+    //      // go up with no ladder?
+    //      cursor.y = next.y;
+    //    }
+    //  }
+      
+    //  cursor.y = next.y;
+    //  corridors[i].addPlat((int) cursor.x, (int) cursor.y, (int) next.x, (int) next.y, checkNext(i));
+    //}
+    
+    for (int i = corridors.length - 1; i >= 0; i--) {
+      corridors[i].constructPlats();
+    }
   }
 }
